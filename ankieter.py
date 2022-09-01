@@ -1,38 +1,82 @@
 from pprint import pprint
-from surveys import Surveys
+from surveys import SurveyHelper
 import inquirer
 import pandas as pd
 from tqdm import tqdm
 from datetime import datetime
+from dbcontext import dbcontext
+from dotenv import dotenv_values
 
-srv = Surveys()
-i = 0
+# ---------------------- initialization
 
-while not srv.is_connection():
-    print(f"Nie udało się połączyć na wprowadzonych poświadczeniach (próba {i}), kod błędu to:\n {srv.get_exception()}")
-    srv = Surveys()
-    i = i + 1
+# load config
+config = dotenv_values('.env')
+erro = False
 
-av_srv = []
+# create None type varialbe for database context
+dbctx = None
 
-for i, r in srv.available().iterrows():
-    av_srv.append(r.kod)
+# check credentials
+user = None
+password = None
 
-game = True
+# try to get credentials from enviroment file
+read_error = False
+try:
+    user = config['USER']
+    password = config['PASSWORD']
+except KeyError as e:
+    read_error = True
+    print(f"Nie można znaleźć klucza {e} w pliku środowiskowym.\nProszę uzupełnić dane ręcznie.")
+finally:
 
-while game:
+    can_skip = False
+    if not read_error:
+        # check connection on .env credentials
+        dbctx = dbcontext(user, password)
+        can_skip = dbctx.is_connection()
+        if not can_skip:
+            print("Nawiązanie połączenia na danych z pliku środowiskowego nie powiodło się, wprowadź dane ręcznie.")
+        else:
+            print("Nawiązanie połączenia z bazą danych, z użyciem pliku środowiskowego, powiodło się.")
 
-    questions = [
-    inquirer.List('survey_code',
-                    message="Którą ankietę chcesz wybrać?",
-                    choices=av_srv,
-                ),
-    inquirer.List('type',
-                    message="Czy chcesz policzyć wyniki wszystkich, czy dla pojedyńczego pracownika?",
-                    choices=['Policz wyniki dla wszystkich', 'Sam wybiorę osobę, której wyniki chcę poznać'],
-                ),
-    ]
-    a1 = inquirer.prompt(questions)
+    if not can_skip:
+        login_prompting = True
+        attempt = 0
+        while login_prompting:
+            # read credentials using inquirer
+            user = inquirer.text(message='Proszę wpisać login do USOS/oracledb')
+            password = inquirer.password(message='Proszę wpisać hasło')
+            # check connection
+            dbctx = dbcontext(user, password)
+            if dbctx.is_connection():
+                login_prompting = False
+                print("Połączono z bazą danych.")
+            else:
+                attempt = attempt + 1
+                print(f"\nNie udało się połączyć na wprowadzonych poświadczeniach (próba {attempt}), kod błędu to:\n {dbctx.exc}\n\nSpróbuj ponownie...\n")
+
+# finally create instance of SurveyHelper, using initialized dbcontext
+helper = SurveyHelper(dbctx)
+
+
+# ---------------------- inquirer prompting / final code
+all_surveys = [] # list for all survey codes available on '0500-%' filter.
+
+for i, r in helper.available().iterrows(): # iterrow DataFrame from helper to save as list[all_surveys]
+    all_surveys.append(r.kod) # rows: kod, opis
+
+# game_loop variable, after calculating program ask about exit or start from scratch with calculations.
+game_loop = True
+
+while game_loop:
+
+    # TODO: create way to select filter
+
+    a1 = inquirer.prompt([
+        inquirer.List('survey_code',message="Którą ankietę chcesz wybrać?",choices=all_surveys),
+        inquirer.List('type',message="Czy chcesz policzyć wyniki wszystkich, czy dla pojedyńczego pracownika?",choices=['Policz wyniki dla wszystkich', 'Sam wybiorę osobę, której wyniki chcę poznać']),
+    ])
 
     survey_code = a1['survey_code']
 
@@ -60,19 +104,19 @@ while game:
         print(f'Plik {filename} został zapisany w katalogu aplikacji.')
 
     else:
-
-        questions = [
-        inquirer.List('search-type',
-                        message="Czy chcesz wyświetlić listę pracowników (duża), czy wyszukać po nazwisku?",
-                        choices=['Wyświetl pełną listę pracowników na wybraną wcześniej ankietę', 'Chcę wpisać nazwisko i wybrać z znalezionych wyników'],
-                    ),
-        ]
-        a2 = inquirer.prompt(questions)
+        a2 = inquirer.prompt([
+            inquirer.List('search-type',message="Czy chcesz wyświetlić listę pracowników (duża), czy wyszukać po nazwisku?",choices=['Wyświetl pełną listę pracowników na wybraną wcześniej ankietę', 'Chcę wpisać nazwisko i wybrać z znalezionych wyników'])
+        ])
         
         if a2['search-type'] == 'Wyświetl pełną listę pracowników na wybraną wcześniej ankietę':
             workers = ['Chcę wrócić do poprzedniego wyboru']
-            for i, r in srv.workers(survey_code).iterrows():
-                workers.append(r.imie + ' ' + r.nazwisko)
+            for i, r in helper.workers(survey_code).iterrows():
+                workers.append(f'[{r.prac_id}] {r.imie} {r.nazwisko}')
+
+            a3 = inquirer.prompt([
+                inquirer.List('search-type',message=f"Wybierz pracownika z ankiety {survey_code}",choices=workers)
+            ])
+
 
         else:
 

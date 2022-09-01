@@ -1,14 +1,10 @@
 from dbcontext import dbcontext as dbcx
 import inquirer
 
-class Surveys():
+class SurveyHelper():
 
-    def __init__(self):
-
-        user = inquirer.text(message='Proszę wpisać login do USOS/oracledb'),
-        password = inquirer.password(message='Proszę wpisać hasło'),
-
-        self.dbcx = dbcx(user[0],password[0])
+    def __init__(self, dbcontext):
+        self.dbcx = dbcontext
 
     def available(self):
         return self.dbcx.query("select kod, opis, utw_data from DZ_EDYCJE_ANKIET where kod like '0500%' order by utw_data DESC")    
@@ -24,9 +20,3 @@ class Surveys():
         sum = values.sum()[0]
         len = values.shape[0]
         return sum/len
-
-    def is_connection(self):
-        return self.dbcx.is_connection()
-
-    def get_exception(self):
-        return self.dbcx.exc
