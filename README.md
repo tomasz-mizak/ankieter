@@ -22,8 +22,7 @@ PORT=(port)
 DBN=(nazwa bazy/nazwa usługi)
 IC_PATH="C:\instantclient"
 ```
-<b>Pola dodatkowe</b>
-
+<b>Pola dodatkowe</b><br/>
 Pola dodatkowe używamy w sytuacji częstego korzystania z programu, głównym celem jest skrócenie dostępu do bazy, za każdym razem przy uruchomieniu programu należy podawać dane do logowania, owe pola pomijają logowanie. Oczywiście nie zachęcam do stosowania, gdyż jest to o wiele mniej bezpieczne.
 ```
 USER=
