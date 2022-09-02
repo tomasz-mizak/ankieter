@@ -1,6 +1,8 @@
 # Ankieter
 Prosty interfejs konsolowy do przetwarzania danych ankiet, z sytemu USOS.
 
+<img src="https://i.imgur.com/Pu5zuKf.png" alt="Hyper.io terminal Ankieter program preview"></img>
+
 Funkcje
 - Liczenie średniej dla wszystkich pracowników w wybranej ankiecie (zapis w pliku .csv)
 - Liczenie średniej dla pojedyńczej osoby (wyszukiwanie ręczne osób z całego zbioru, filtrowanie po nazwisku)
@@ -30,5 +32,3 @@ PASSWORD=
 ```
 # Kolejne zmiany
 W kolejnej wersji zostanie wprowadzone generowanie karty pracownika w xlsx.
-
-<img src="https://i.imgur.com/Pu5zuKf.png" alt="Hyper.io terminal Ankieter program preview"></img>
