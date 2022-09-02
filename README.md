@@ -28,3 +28,7 @@ Pola dodatkowe używamy w sytuacji częstego korzystania z programu, głównym c
 USER=
 PASSWORD=
 ```
+# Kolejne zmiany
+W kolejnej wersji zostanie wprowadzone generowanie karty pracownika w xlsx.
+
+<img src="https://imgur.com/a/UBIXTqu" alt="Hyper.io terminal Ankieter program preview"></img>
