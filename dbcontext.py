@@ -5,7 +5,7 @@ from dotenv import dotenv_values
 
 config = dotenv_values('.env')
 
-oracle.init_oracle_client('./instantclient_21_6')
+oracle.init_oracle_client(config['IC_PATH'])
 
 class dbcontext():
     def __init__(self, user=None, password=None):
