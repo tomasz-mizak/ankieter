@@ -3,9 +3,7 @@ Prosty interfejs konsolowy do przetwarzania danych ankiet, z sytemu USOS.
 
 Funkcje
 - Liczenie średniej dla wszystkich pracowników w wybranej ankiecie (zapis w pliku .csv)
-- Liczenie średniej dla pojedyńczej osoby
--- wyszukiwanie ręczne osób z całego zbioru
--- filtrowanie po nazwisku
+- Liczenie średniej dla pojedyńczej osoby (wyszukiwanie ręczne osób z całego zbioru, filtrowanie po nazwisku)
 
 ## Przed uruchomieniem
 Pobieramy Instant Client od Oracle, oraz umieszczamy go w katalogu ```C:\ (można zmienić w pliku .env)``` pod nazwą ```instantclient```.
