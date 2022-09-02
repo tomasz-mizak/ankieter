@@ -31,4 +31,4 @@ PASSWORD=
 # Kolejne zmiany
 W kolejnej wersji zostanie wprowadzone generowanie karty pracownika w xlsx.
 
-<img src="https://imgur.com/a/UBIXTqu" alt="Hyper.io terminal Ankieter program preview"></img>
+<img src="[https://imgur.com/a/UBIXTqu](https://i.imgur.com/Pu5zuKf.png)" alt="Hyper.io terminal Ankieter program preview"></img>
