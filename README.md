@@ -31,4 +31,5 @@ USER=
 PASSWORD=
 ```
 # Kolejne zmiany
-W kolejnej wersji zostanie wprowadzone generowanie karty pracownika w xlsx.
+- Generowanie karty pracownika w xlsx.
+- Filtrowanie ankiet
