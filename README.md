@@ -34,4 +34,3 @@ PASSWORD=
 - Generowanie karty pracownika w xlsx.
 - Filtrowanie ankiet
 - Przeniesienie CLI do GUI
-- Eksport aplikacji i pierwsze wydanie
